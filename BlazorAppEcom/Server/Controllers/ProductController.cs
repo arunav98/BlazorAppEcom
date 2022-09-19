@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BlazorAppEcom.Server.Services.ProductService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorAppEcom.Server.Controllers
@@ -31,18 +32,35 @@ namespace BlazorAppEcom.Server.Controllers
             },
         };*/
 
-        private readonly DataContext _dataContext;
+        private readonly IProductServices _productServices;
 
-        public ProductController(DataContext dataContext)
+        public ProductController(IProductServices productServices)
         {
-            _dataContext = dataContext;
+            _productServices = productServices;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProduct()
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProduct()
         {
-            var products = await _dataContext.Products.ToListAsync();
-            return Ok(products);
+            var result = await _productServices.GetProductAsync();
+            
+            return Ok(result);
         }
+
+        [HttpGet("{productId}")]
+        public async Task<ActionResult<ServiceResponse<Product>>> GetProduct(int productId)
+        {
+            var result = await _productServices.GetProductAsync(productId);
+
+            return Ok(result);
+        }
+
+        [HttpGet("Category/{categoryUrl}")]
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProductByCategory(string categoryUrl)
+        {
+            var result = await _productServices.GetProductByCategory(categoryUrl);
+            return Ok(result);
+        }
+
     }
 }
