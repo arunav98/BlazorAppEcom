@@ -1,0 +1,69 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.WebUtilities
+@inject IAuthService AuthService
+@inject ILocalStorageService LocalStorage
+@inject ICartService CartService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+<PageTitle>Login</PageTitle>
+<h3>Login</h3>
+
+<EditForm Model="user" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator/>
+    <div class="m-4">
+        <div class="mb-2">
+            <label for="email">Email</label>
+            <InputText id="email" @bind-Value="user.Email" class="form-control" />
+            <ValidationMessage For="@(()=>user.Email)" />
+        </div>
+        <div class="mb-2">
+            <label for="password">Password</label>
+            <InputText id="password" @bind-Value="user.Password" class="form-control" type="password" />
+            <ValidationMessage For="@(()=>user.Password)" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="@messageCss">
+            @message
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code {
+    UserLogin user = new UserLogin();
+    string message = string.Empty;
+    string messageCss = string.Empty;
+
+    private string returnUrl = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("returnUrl", out var url))
+        {
+            returnUrl = url;
+        }
+    }
+
+    public async Task HandleLogin()
+    {
+        var result = await AuthService.Login(user);
+        message = result.Message;
+        if (!result.Success)
+        {
+            messageCss = "text-danger";
+        }
+        else
+        {
+            await LocalStorage.SetItemAsync("authToken", result.Data);
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            await CartService.StoreCartItem(true);
+            await CartService.GetItemCount();
+            NavigationManager.NavigateTo(returnUrl);
+        }
+    }
+
+}

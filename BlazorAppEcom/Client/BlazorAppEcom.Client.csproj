@@ -8,20 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\ProductDetails.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\BlazorAppEcom.Shared.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\ProductDetails.razor" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="Pages\ProductDetails.razor" />
+	</ItemGroup>
 
 </Project>

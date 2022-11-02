@@ -62,5 +62,19 @@ namespace BlazorAppEcom.Server.Controllers
             return Ok(result);
         }
 
+        [HttpGet("Search/{query}/{page}")]
+        public async Task<ActionResult<ServiceResponse<ProductSearchResultDTO>>> SearchProducts(string query,int page=1)
+        {
+            var result = await _productServices.SearchProducts(query,page);
+            return Ok(result);
+        }
+
+        [HttpGet("SearchSuggestion/{query}")]
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> SearchSuggestion(string query)
+        {
+            var result = await _productServices.SearchSuggestion(query);
+            return Ok(result);
+        }
+
     }
 }

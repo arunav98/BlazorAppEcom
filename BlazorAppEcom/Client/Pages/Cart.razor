@@ -1,0 +1,66 @@
+﻿@page "/cart"
+@inject ICartService CartService
+
+<PageTitle>Cart</PageTitle>
+<h4>Cart</h4>
+@if(cartProduct==null|| cartProduct.Count==0){
+    <span>@Message</span>
+}
+else{
+    <div>
+        @foreach (var product in cartProduct)
+        {
+            <div class="container">
+                <div class="image-wrapper"><img src="@product.ImageUrl" class="image"/></div>
+                <div class="name">
+                    <h5><a href="/product/@product.ProductId">@product.Title</a></h5>
+                    <span>@product.ProductType</span><br>
+                    <input type="number" class="form-control input-quantity" value="@product.Quantity"
+                        @onchange="@((ChangeEventArgs e)=>UpdateCart(e,product))" min="1"/>
+                    <button class="btn-delete" @onclick="@(()=>
+                        RemoveCartItem(@product.ProductId,@product.ProductTypeId))">Remove</button>
+                </div>
+                <div >$@product.Price * @product.Quantity = <i class="price"> $@(product.Price * product.Quantity) </i></div>
+            </div>
+        }
+        <div class="price">Total (@cartProduct.Count):$@cartProduct.Sum(product=>@product.Price * @product.Quantity)</div>
+    </div>
+}
+
+@code {
+    List<CartProductResponseDTO> cartProduct = null;
+    string Message="Loading Cart";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCart();
+    }
+
+    private async Task RemoveCartItem(int productId, int productTypeId){
+        await CartService.RemoveCartItem(productId, productTypeId);
+        await LoadCart();
+    }
+
+    private async Task LoadCart(){
+        if ((await CartService.GetAll()).Count == 0)
+        {
+            Message = "Cart is Empty";
+            cartProduct = new List<CartProductResponseDTO>();
+        }
+        else
+        {
+            cartProduct = await CartService.GetCartProducts();
+        }
+    }
+
+    private async Task UpdateCart(ChangeEventArgs e,CartProductResponseDTO product){
+        product.Quantity = int.Parse(e.Value.ToString());
+        if (product.Quantity < 1)
+            product.Quantity = 1;
+        await CartService.UpdateQuantity(product);
+    }
+
+    
+
+
+}

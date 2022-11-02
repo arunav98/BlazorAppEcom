@@ -1,5 +1,6 @@
 ﻿@page "/"
 @page "/{categoryUrl}"
+@page "/search/{query}/{page:int}"
 @inject IProductServices ProductServices;
 
 <PageTitle>Home</PageTitle>
@@ -10,7 +11,20 @@
     [Parameter]
     public String? CategoryUrl{ get; set; } = null;
 
+    [Parameter]
+    public String? query{ get; set; } = null;
+
+    [Parameter]
+    public int page{ get; set; } = 1;
+
     protected override async Task OnParametersSetAsync(){
-        await ProductServices.GetProducts(CategoryUrl);
+        if (query != null)
+        {
+            await ProductServices.SearchProducts(query,page);
+        }
+        else
+        {
+            await ProductServices.GetProducts(CategoryUrl);
+        }
     }
 }

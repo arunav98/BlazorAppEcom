@@ -1,4 +1,13 @@
 ﻿.movieImage{
     height:400px;
-    max-width:600px;
+    width:250px;
 }
+.page-selection{
+    margin-right:15px;
+    margin-bottom:3px;
+}
+.price{
+    color:green;
+}
+
+

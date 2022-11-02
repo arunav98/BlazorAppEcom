@@ -1,0 +1,51 @@
+﻿@inject NavigationManager NavigationManager
+@inject IProductServices ProductServices
+
+
+<div class="input-group">
+    <input @bind-value="query"
+           @bind-value:event="oninput"
+           type="search"
+           list="products"
+           class="form-control"
+           placeholder="search"
+           @onkeyup="HangleSearch"
+           @ref="searchInput"
+    />
+    <datalist id="products">
+        @foreach (var item in suggestions)
+       {
+           <option>@item</option>
+       }
+    </datalist>
+    <div class="input-group-append">
+        <button class="btn-primary" @onclick="SearchProducts">
+            <span class="oi oi-magnifying-glass"></span>
+        </button>
+    </div>
+</div>
+
+@code {
+    private string query = string.Empty;
+    private List<string> suggestions = new List<string>();
+    protected ElementReference searchInput;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender){
+        if(firstRender){
+            await searchInput.FocusAsync();
+        }
+    }
+
+    public void SearchProducts(){
+        NavigationManager.NavigateTo($"/search/{query}/1");
+    }
+
+    public async Task HangleSearch(KeyboardEventArgs args){
+        if(args.Key ==null || args.Key.Equals("Enter")){
+            SearchProducts();
+        }
+        else if(query.Length>1){
+            suggestions = await ProductServices.SearchSuggestion(query);
+        }
+    }
+}
