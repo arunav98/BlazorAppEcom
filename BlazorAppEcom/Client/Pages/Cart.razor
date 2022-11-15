@@ -42,14 +42,11 @@ else{
     }
 
     private async Task LoadCart(){
-        if ((await CartService.GetAll()).Count == 0)
+        await CartService.GetItemCount();
+        cartProduct = await CartService.GetCartProducts();
+        if (cartProduct == null || cartProduct.Count == 0)
         {
             Message = "Cart is Empty";
-            cartProduct = new List<CartProductResponseDTO>();
-        }
-        else
-        {
-            cartProduct = await CartService.GetCartProducts();
         }
     }
 
@@ -59,8 +56,4 @@ else{
             product.Quantity = 1;
         await CartService.UpdateQuantity(product);
     }
-
-    
-
-
 }

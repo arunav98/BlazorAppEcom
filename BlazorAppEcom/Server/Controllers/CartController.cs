@@ -32,6 +32,22 @@ namespace BlazorAppEcom.Server.Controllers
             return Ok(result);
         }
 
+        [HttpPost("add")]
+        public async Task<ActionResult<ServiceResponse<bool>>> AddCartItem(CartItem cartItems)
+        {
+
+            var result = await _cartService.AddToCart(cartItems);
+            return Ok(result);
+        }
+
+        [HttpPost("update")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateCartItem(CartItem cartItems)
+        {
+
+            var result = await _cartService.UpdateToCart(cartItems);
+            return Ok(result);
+        }
+
         [HttpGet("count")]
         public async Task<ActionResult<ServiceResponse<int>>> CartItemCount()
         {
