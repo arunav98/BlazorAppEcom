@@ -5,6 +5,7 @@ global using BlazorAppEcom.Server.Services.ProductService;
 global using BlazorAppEcom.Server.Services.CategoryService;
 global using BlazorAppEcom.Server.Services.CartService;
 global using BlazorAppEcom.Server.Services.AuthService;
+global using BlazorAppEcom.Server.Services.OrderService;
 
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,6 +32,7 @@ builder.Services.AddScoped<IProductServices,ProductServices>();
 builder.Services.AddScoped<ICategoryService,CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlazorAppEcom.Shared;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace BlazorAppEcom.Server.Services.CartService
@@ -84,7 +85,7 @@ namespace BlazorAppEcom.Server.Services.CartService
 
             var sameItem = await _context.CartItems.FirstOrDefaultAsync(ci=>
             ci.ProductId==cartItem.ProductId && ci.ProductTypeId==cartItem.ProductTypeId 
-            && ci.UserId==cartItem.UserId);
+            && ci.UserId==GetUserId());
 
             if (sameItem == null)
             {
@@ -117,6 +118,27 @@ namespace BlazorAppEcom.Server.Services.CartService
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<bool> { Data = true };
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveItem(int productId, int productTypeId)
+        {
+            var item = await _context.CartItems.FirstOrDefaultAsync(ci =>
+            ci.ProductId == productId && ci.ProductTypeId == productTypeId
+            && ci.UserId == GetUserId());
+
+            if (item == null)
+            {
+                return new ServiceResponse<bool>
+                { Data = false, Success = false, Message = "Cart Item Doesn't Exist" };
+            }
+            
+
+
+            _context.CartItems.Remove(item);
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool> { Data = true };
+
         }
     }
 }

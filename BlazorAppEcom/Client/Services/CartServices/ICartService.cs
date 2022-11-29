@@ -5,6 +5,7 @@
         event Action onChange;
         Task AddToCart(CartItem cartItem);
         Task<List<CartItem>> GetAll();
+        Task<bool> IsUserAuthenticated();
         Task<List<CartProductResponseDTO>> GetCartProducts();
         Task RemoveCartItem(int productId,int productVariantId);
         Task UpdateQuantity(CartProductResponseDTO product);

@@ -1,5 +1,7 @@
 ﻿@page "/register"
 @inject IAuthService AuthService
+@inject ICartService CartService
+@inject NavigationManager NavManager
 
 <PageTitle>User Registration</PageTitle>
 <h3>User Registration</h3>
@@ -44,5 +46,11 @@
             messageCss = "text-success";
         }
 
+    }
+
+    protected override async void OnInitialized(){
+        if(await CartService.IsUserAuthenticated()){
+            NavManager.NavigateTo("/");
+        }
     }
 }

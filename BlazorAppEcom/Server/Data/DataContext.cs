@@ -12,6 +12,9 @@ namespace BlazorAppEcom.Server.Data
             modelBuilder.Entity<CartItem>().HasKey(
                 ci => new { ci.UserId, ci.ProductId, ci.ProductTypeId });
 
+            modelBuilder.Entity<OrderItem>().HasKey(
+                oi => new {  oi.OrderId, oi.ProductTypeId });
+
             modelBuilder.Entity<ProductType>().HasData(
                     new ProductType { Id = 1, Name = "Default" },
                     new ProductType { Id = 2, Name = "Paperback" },
@@ -262,6 +265,8 @@ namespace BlazorAppEcom.Server.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
     }
     
 
