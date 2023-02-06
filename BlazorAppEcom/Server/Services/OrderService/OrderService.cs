@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using BlazorAppEcom.Server.Data;
+using System.Security.Claims;
 
 namespace BlazorAppEcom.Server.Services.OrderService
 {
@@ -7,13 +8,15 @@ namespace BlazorAppEcom.Server.Services.OrderService
         private readonly DataContext _context;
         private readonly ICartService _cartService;
         private readonly IAuthService _authService;
+        private readonly IAddressService _addressService;
 
         public OrderService(DataContext context, ICartService cartService,
-            IAuthService authService)
+            IAuthService authService,IAddressService addressService)
         {
             _context = context;
             _cartService = cartService;
             _authService = authService;
+            _addressService = addressService;
         }
 
         public async Task<ServiceResponse<OrderDetailsResponseDTO>> GetOrderDetails(int orderId)
@@ -38,7 +41,13 @@ namespace BlazorAppEcom.Server.Services.OrderService
             {
                 OrderDate = order.OrderDate,
                 TotalPrice = order.TotalPrice,
-                Products = new List<OrderDetailsProductResponseDTO>()
+                Products = new List<OrderDetailsProductResponseDTO>(),
+                Name = order.Name,
+                Street = order.Street,
+                City= order.City,
+                State= order.State,
+                Pincode= order.Pincode,
+                Country= order.Country,
             };
 
             order.OrderItems.ForEach(item =>
@@ -97,13 +106,20 @@ namespace BlazorAppEcom.Server.Services.OrderService
                 Quantity= product.Quantity,
                 TotalPrice = product.Price*product.Quantity,
             }));
+            var address = await _addressService.GetAddress();
             var order = new Order
             {
                 UserId = _authService.GetUserId(),
                 OrderDate = DateTime.Now,
                 TotalPrice = totalPrice,
-                OrderItems = orderItems
-            };
+                OrderItems = orderItems,
+                Name = address.Data.Name,
+                Street= address.Data.Street,
+                City= address.Data.City,
+                State= address.Data.State,
+                Pincode= address.Data.Pincode,
+                Country= address.Data.Country,
+        };
 
             _context.Orders.Add(order);
             _context.CartItems.RemoveRange(_context.CartItems
