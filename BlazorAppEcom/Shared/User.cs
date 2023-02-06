@@ -13,5 +13,6 @@ namespace BlazorAppEcom.Shared
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public DateTime date { get; set; } = DateTime.Now;
+        public Addresses Addresses { get; set; }
     }
 }

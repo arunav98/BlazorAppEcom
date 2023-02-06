@@ -1,0 +1,71 @@
+﻿@inject IAddressService addressService
+
+@if( addresses == null){
+    <span>
+        You haven't specified a Delivery address yet.
+        <button class="btn btn-primary" @onclick="InItAddress">Add an address?</button>
+    </span>
+}
+else if(!editAddress){
+    <p>
+        <span>@addresses.Name</span><br>
+        <span>@addresses.Street</span><br>
+        <span>@addresses.City, @addresses.State, @addresses.Pincode</span><br>
+        <span>@addresses.Country</span>
+    </p>
+    <button class="btn btn-primary" @onclick="EditAddress">Edit</button>
+}
+else{
+    <EditForm Model="addresses" OnSubmit="SubmitAddress">
+        <div class="mb-3">
+            <label for="name">Name</label>
+            <InputText id="name" @bind-Value="addresses.Name" class="form-control"></InputText>
+        </div>
+        <div class="mb-3">
+            <label for="street">Street</label>
+            <InputText id="street" @bind-Value="addresses.Street" class="form-control"></InputText>
+        </div>
+        <div class="mb-3">
+            <label for="city">City</label>
+            <InputText id="city" @bind-Value="addresses.City" class="form-control"></InputText>
+        </div>
+        <div class="mb-3">
+            <label for="state">State</label>
+            <InputText id="state" @bind-Value="addresses.State" class="form-control"></InputText>
+        </div>
+        <div class="mb-3">
+            <label for="pincode">Pincode</label>
+            <InputText id="pincode" @bind-Value="addresses.Pincode" class="form-control"></InputText>
+        </div>
+        <div class="mb-3">
+            <label for="country">Country</label>
+            <InputText id="country" @bind-Value="addresses.Country" class="form-control"></InputText>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+}
+
+@code {
+    Addresses addresses = null;
+    bool editAddress = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        addresses = await addressService.GetAddresses();
+    }
+
+    private async Task SubmitAddress(){
+        editAddress = false;
+        addresses = await addressService.AddOrUpdateAddresses(addresses);
+    }
+
+    private void InItAddress(){
+        addresses = new Addresses();
+        editAddress = true;
+    }
+
+    private void EditAddress(){
+        editAddress = true;
+    }
+
+}

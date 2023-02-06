@@ -1,10 +1,16 @@
 ﻿@page "/cart"
 @inject ICartService CartService
+@inject IOrderService OrderService
+@inject IAddressService AddressService
+@inject IAuthService AuthService
 
 <PageTitle>Cart</PageTitle>
 <h4>Cart</h4>
 @if(cartProduct==null|| cartProduct.Count==0){
     <span>@Message</span>
+}
+else if(OrderPlaced==true){
+    <span>Thanks for placing the order! Your can check <a href="orders">here</a></span>
 }
 else{
     <div>
@@ -24,15 +30,27 @@ else{
             </div>
         }
         <div class="price">Total (@cartProduct.Count):$@cartProduct.Sum(product=>@product.Price * @product.Quantity)</div>
+
     </div>
+    @if(isAuthenticated){
+        <div>
+            <h5> Delivery Address</h5>
+            <AddressForm/>
+        </div>
+    }
+    <button @onclick="PlaceOrder" class="btn alert-success float-end mt-1">Order</button>
 }
 
 @code {
     List<CartProductResponseDTO> cartProduct = null;
     string Message="Loading Cart";
+    bool OrderPlaced = false;
+    bool isAuthenticated = false;
 
     protected override async Task OnInitializedAsync()
     {
+        OrderPlaced= false;
+        isAuthenticated = await AuthService.IsUserAuthenticated();
         await LoadCart();
     }
 
@@ -55,5 +73,11 @@ else{
         if (product.Quantity < 1)
             product.Quantity = 1;
         await CartService.UpdateQuantity(product);
+    }
+
+    private async Task PlaceOrder(){
+        await OrderService.PlaceOrder();
+        await CartService.GetItemCount();
+        OrderPlaced = true;
     }
 }
