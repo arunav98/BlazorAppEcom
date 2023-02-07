@@ -13,7 +13,7 @@ namespace BlazorAppEcom.Shared
         public string Email { get; set; }=string.Empty;
         [Required,StringLength(100),MinLength(6)]
         public string Password { get; set; } = string.Empty;
-        [Compare("Password",ErrorMessage ="Password Didn't Match")]
+        [Compare("Password",ErrorMessage ="Passwords do not Match")]
         public string ConfirmPassword { get; set; }=string.Empty;
     }
 }

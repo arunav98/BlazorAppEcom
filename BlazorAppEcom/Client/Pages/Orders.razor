@@ -1,14 +1,14 @@
 ﻿@page "/orders"
 @inject IOrderService orderService
 <PageTitle>Order History</PageTitle>
-<h3>Orders</h3>
+<h4>Orders </h4>
 
 @if(orders==null){
     <span>Loading Orders...</span>
 }
 else if(orders.Count<=0)
 {
-    <span>You have no orders.</span>
+    <span>You have no orders....</span>
 }
 else{
     foreach (var order in orders)

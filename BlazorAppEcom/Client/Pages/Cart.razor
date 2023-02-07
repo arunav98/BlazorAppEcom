@@ -5,12 +5,12 @@
 @inject IAuthService AuthService
 
 <PageTitle>Cart</PageTitle>
-<h4>Cart</h4>
+<h4>Cart Items</h4>
 @if(cartProduct==null|| cartProduct.Count==0){
     <span>@Message</span>
 }
 else if(OrderPlaced==true){
-    <span>Thanks for placing the order! Your can check <a href="orders">here</a></span>
+    <span>Thanks for placing the order! You can check <a href="orders">here</a></span>
 }
 else{
     <div>
