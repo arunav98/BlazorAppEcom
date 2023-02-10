@@ -24,5 +24,9 @@
     <ProjectReference Include="..\Shared\BlazorAppEcom.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="image\" />
+  </ItemGroup>
+
 
 </Project>
